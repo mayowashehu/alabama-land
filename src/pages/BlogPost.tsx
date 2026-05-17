@@ -99,7 +99,7 @@ export default function BlogPost(): JSX.Element {
               <div className="flex items-center gap-4 py-5 border-t border-b border-white/[0.06] mb-10">
                 <div className="w-10 h-10 overflow-hidden flex-shrink-0">
                   <img
-                    src="/images/owner.jpg"
+                    src="/images/owner.png"
                     alt={post.author}
                     className="w-full h-full object-cover object-top"
                     style={IMG_STYLE}

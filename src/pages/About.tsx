@@ -112,7 +112,7 @@ export default function About(): JSX.Element {
           name="description"
           content="Meet Mrs. Alaba Afusat, CEO of Alabama Onas Multibiz Enterprises. Verified land for sale in Sagamu, Ogun State with full C of O documentation."
         />
-        <meta property="og:image" content="/images/owner.jpg" />
+        <meta property="og:image" content="/images/owner.png" />
       </Helmet>
 
       {/* ── Section 1: Hero ───────────────────────────────────────────────── */}
@@ -172,7 +172,7 @@ export default function About(): JSX.Element {
               aria-hidden="true"
             />
             <img
-              src="/images/owner.jpg"
+              src="/images/owner.png"
               alt="Mrs. Alaba Afusat, CEO"
               className="block w-full aspect-[3/4] object-cover object-top"
               style={IMG_STYLE}

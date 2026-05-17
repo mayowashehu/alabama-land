@@ -97,7 +97,7 @@ export function HeroSection(): JSX.Element {
             aria-hidden="true"
           />
           <img
-            src="/images/owner.jpg"
+            src="/images/owner.png"
             alt="CEO Mrs. Alabama Onas"
             className="block w-full aspect-[3/4] object-cover object-top"
             style={IMG_FILTER}
