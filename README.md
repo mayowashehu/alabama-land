@@ -1,7 +1,5 @@
 # Alabama Onas Multibiz Enterprises
 
-![Banner placeholder](./docs/banner-placeholder.png)
-
 ## Overview
 
 Alabama Onas Multibiz Enterprises is a land sales platform built for a Sagamu, Ogun State-based land business. The project is a responsive React + TypeScript frontend focused on one core goal: earning buyer trust before a single naira changes hands, for a business where most customers cannot physically inspect the land before deciding.
@@ -46,12 +44,6 @@ The frontend is a React + TypeScript SPA built with Vite, using Tailwind CSS for
 - Google Maps Embed API (planned, for listing locations)
 
 Backend (intended, verify current integration status): Node.js, Express, TypeScript, MongoDB/Mongoose.
-
-## Screenshots
-
-![Screenshot placeholder — homepage](./docs/screenshot-home-placeholder.png)
-![Screenshot placeholder — listings page](./docs/screenshot-listings-placeholder.png)
-![Screenshot placeholder — admin dashboard](./docs/screenshot-admin-placeholder.png)
 
 ## Live Demo
 
