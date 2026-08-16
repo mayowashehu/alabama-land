@@ -14,6 +14,12 @@ const RESOURCES = [
   { label: 'FAQs', href: '#' },
 ];
 
+const CREDENTIALS = [
+  ['CAC Registration', 'In Process'],
+  ['Documents', "C of O · Gov't Consent · Excision"],
+  ['Service Area', 'Sagamu & Ogun State'],
+];
+
 const WA_SVG = (
   <svg className="w-3.5 h-3.5 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
     <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.67-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.076 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
@@ -21,20 +27,40 @@ const WA_SVG = (
   </svg>
 );
 
+function CheckMark(): JSX.Element {
+  return (
+    <svg viewBox="0 0 16 16" className="w-3 h-3 text-[#b8975a]/60 flex-shrink-0">
+      <circle cx="8" cy="8" r="7" fill="none" stroke="currentColor" strokeWidth="0.75" />
+      <path d="M5 8.2l2 2 4-4.4" fill="none" stroke="currentColor" strokeWidth="0.9" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
 export function Footer(): JSX.Element {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="w-full bg-[#080f09] border-t border-white/[0.06]">
-      <div className="max-w-7xl mx-auto px-10 sm:px-14 lg:px-16 pt-16 pb-10">
+    <footer className="relative w-full bg-[#080f09] border-t border-white/[0.06] overflow-hidden">
+
+      {/* Cadastral grid, matching the hero sections — footer as the site's closing "plot" */}
+      <svg className="absolute inset-0 w-full h-full opacity-[0.035] pointer-events-none" aria-hidden="true" preserveAspectRatio="none">
+        <defs>
+          <pattern id="cadastral-footer" width="64" height="64" patternUnits="userSpaceOnUse">
+            <path d="M64 0H0V64" fill="none" stroke="#b8975a" strokeWidth="1" />
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#cadastral-footer)" />
+      </svg>
+
+      <div className="relative max-w-7xl mx-auto px-10 sm:px-14 lg:px-16 pt-16 pb-10">
 
         {/* Top row */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
 
           {/* Brand */}
           <div className="md:col-span-1">
-            <Link to="/" className="inline-flex flex-col gap-0 mb-6">
-              <span className="font-cormorant text-2xl font-medium leading-none text-[#f5f0e8] tracking-wide">
+            <Link to="/" className="inline-flex flex-col gap-0 mb-6 group">
+              <span className="font-cormorant text-2xl font-medium leading-none text-[#f5f0e8] tracking-wide transition-colors duration-300 group-hover:text-[#d4b87a]">
                 AO
               </span>
               <span className="font-sans text-[9px] font-medium tracking-[0.22em] uppercase text-[#b8975a] leading-none mt-0.5">
@@ -44,9 +70,12 @@ export function Footer(): JSX.Element {
                 Multibiz Enterprises
               </span>
             </Link>
-            <p className="font-cormorant text-base italic text-[#f5f0e8]/40 leading-relaxed">
+            <p className="font-cormorant text-base italic text-[#f5f0e8]/40 leading-relaxed mb-4">
               {'"Buy Peace, Build Legacy."'}
             </p>
+            <span className="inline-block font-sans text-[10px] tracking-[0.18em] uppercase text-[#f5f0e8]/20">
+              Est. 2018 &middot; Sagamu
+            </span>
           </div>
 
           {/* Quick links */}
@@ -59,7 +88,7 @@ export function Footer(): JSX.Element {
                 <li key={link.path}>
                   <Link
                     to={link.path}
-                    className="font-sans text-sm font-light text-[#f5f0e8]/45 hover:text-[#f5f0e8] transition-colors duration-200"
+                    className="font-sans text-sm font-light text-[#f5f0e8]/45 hover:text-[#f5f0e8] hover:pl-1 transition-all duration-200"
                   >
                     {link.label}
                   </Link>
@@ -78,7 +107,7 @@ export function Footer(): JSX.Element {
                 <li key={r.label}>
                   <a
                     href={r.href}
-                    className="font-sans text-sm font-light text-[#f5f0e8]/45 hover:text-[#f5f0e8] transition-colors duration-200"
+                    className="font-sans text-sm font-light text-[#f5f0e8]/45 hover:text-[#f5f0e8] hover:pl-1 transition-all duration-200"
                   >
                     {r.label}
                   </a>
@@ -97,7 +126,7 @@ export function Footer(): JSX.Element {
                 href="https://wa.me/2347082151926"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2.5 font-sans text-sm font-light text-[#f5f0e8]/45 hover:text-[#b8975a] transition-colors duration-200"
+                className="inline-flex items-center gap-2.5 font-sans text-sm font-light text-[#f5f0e8]/45 hover:text-[#b8975a] transition-colors duration-200 w-fit"
               >
                 {WA_SVG}
                 +234 708 215 1926
@@ -113,17 +142,16 @@ export function Footer(): JSX.Element {
 
         {/* Credentials strip */}
         <div className="border-t border-white/[0.06] pt-8 mb-8">
-          <div className="flex flex-wrap gap-x-8 gap-y-2">
-            {[
-              ['CAC Registration', 'In Process'],
-              ['Documents', 'C of O · Gov\'t Consent · Excision'],
-              ['Service Area', 'Sagamu & Ogun State'],
-            ].map(([label, value]) => (
-              <p key={label} className="font-sans text-[11px] text-[#f5f0e8]/25">
-                <span className="text-[#f5f0e8]/40 font-medium">{label}:</span>
-                {' '}
-                {value}
-              </p>
+          <div className="flex flex-wrap gap-x-8 gap-y-3">
+            {CREDENTIALS.map(([label, value]) => (
+              <div key={label} className="flex items-center gap-2">
+                <CheckMark />
+                <p className="font-sans text-[11px] text-[#f5f0e8]/25">
+                  <span className="text-[#f5f0e8]/40 font-medium">{label}:</span>
+                  {' '}
+                  {value}
+                </p>
+              </div>
             ))}
           </div>
         </div>

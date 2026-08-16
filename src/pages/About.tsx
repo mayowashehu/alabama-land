@@ -6,6 +6,15 @@ import { getWhatsAppLink } from '../utils/whatsapp';
 
 const IMG_STYLE = { filter: 'grayscale(12%) contrast(1.04)' };
 
+function BeaconMark({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M16 2v10M16 20v10M2 16h10M20 16h10" stroke="currentColor" strokeWidth="1" />
+      <circle cx="16" cy="16" r="3.5" stroke="currentColor" strokeWidth="1" fill="none" />
+    </svg>
+  );
+}
+
 // ─── Process Step ────────────────────────────────────────────────────────────
 
 interface ProcessStepProps {
@@ -17,8 +26,8 @@ interface ProcessStepProps {
 
 function ProcessStep({ number, title, description, isLast }: ProcessStepProps): JSX.Element {
   return (
-    <div className={`flex flex-col py-8 border-t border-white/[0.06] ${!isLast ? 'lg:border-r lg:border-white/[0.06] lg:pr-8' : ''}`}>
-      <span className="font-cormorant text-[13px] text-[#b8975a] tracking-widest tabular-nums mb-5">
+    <div className={`group flex flex-col py-8 border-t border-white/[0.06] transition-colors duration-300 ${!isLast ? 'lg:border-r lg:border-white/[0.06] lg:pr-8' : ''}`}>
+      <span className="font-cormorant text-[13px] text-[#b8975a]/60 tracking-widest tabular-nums mb-5 transition-colors duration-300 group-hover:text-[#b8975a]">
         {'0' + number}
       </span>
       <h3 className="font-cormorant text-xl font-medium text-[#f5f0e8] mb-2 leading-snug">
@@ -42,19 +51,19 @@ interface CredentialCardProps {
 
 function CredentialCard({ index, title, description, icon }: CredentialCardProps): JSX.Element {
   return (
-    <div className="flex flex-col bg-[#131f14] border border-white/[0.07] p-8 transition-colors duration-300 hover:border-[#b8975a]/30">
+    <div className="group flex flex-col bg-[#131f14] border border-white/[0.07] p-8 transition-all duration-300 hover:border-[#b8975a]/30 hover:-translate-y-1 hover:shadow-[0_20px_40px_-20px_rgba(0,0,0,0.6)]">
       <div className="flex items-start justify-between mb-7">
         <span className="font-sans text-[10px] tracking-[0.2em] uppercase text-[#b8975a]/50">
           {'0' + (index + 1)}
         </span>
-        <div className="w-7 h-7 text-[#b8975a]/40">
+        <div className="w-7 h-7 text-[#b8975a]/40 transition-colors duration-300 group-hover:text-[#b8975a]/80">
           {icon}
         </div>
       </div>
       <h3 className="font-cormorant text-lg font-medium text-[#f5f0e8] mb-3 leading-snug">
         {title}
       </h3>
-      <span className="block w-6 h-px bg-[#b8975a]/40 mb-3" />
+      <span className="block w-6 h-px bg-[#b8975a]/40 mb-3 transition-all duration-300 group-hover:w-10" />
       <p className="font-sans text-sm font-light leading-relaxed text-[#f5f0e8]/45">
         {description}
       </p>
@@ -116,47 +125,80 @@ export default function About(): JSX.Element {
       </Helmet>
 
       {/* ── Section 1: Hero ───────────────────────────────────────────────── */}
-      <section className="relative w-full min-h-screen overflow-hidden bg-[#0f1810] grid grid-cols-1 lg:grid-cols-2 pt-16">
+      <section className="relative w-full min-h-screen overflow-hidden bg-[#0c120d] grid grid-cols-1 lg:grid-cols-2 pt-16">
+        <style>{`
+          @keyframes aboutHeroFadeUp {
+            from { opacity: 0; transform: translateY(14px); }
+            to { opacity: 1; transform: translateY(0); }
+          }
+          .ah-fade { animation: aboutHeroFadeUp 0.9s cubic-bezier(0.16,1,0.3,1) both; }
+          .ah-fade-1 { animation-delay: 0.05s; }
+          .ah-fade-2 { animation-delay: 0.18s; }
+          .ah-fade-3 { animation-delay: 0.30s; }
+          .ah-fade-4 { animation-delay: 0.42s; }
+          @media (prefers-reduced-motion: reduce) {
+            .ah-fade { animation: none; }
+          }
+        `}</style>
 
-        {/* Subtle texture */}
+        {/* Cadastral grid, matching the home hero */}
+        <svg className="absolute inset-0 w-full h-full opacity-[0.05] pointer-events-none" aria-hidden="true" preserveAspectRatio="none">
+          <defs>
+            <pattern id="cadastral-about" width="64" height="64" patternUnits="userSpaceOnUse">
+              <path d="M64 0H0V64" fill="none" stroke="#b8975a" strokeWidth="1" />
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#cadastral-about)" />
+        </svg>
+
         <div
           className="absolute inset-0 bg-cover bg-center opacity-[0.12]"
           style={{ backgroundImage: "url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=1400&q=80')" }}
           aria-hidden="true"
         />
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{ background: 'radial-gradient(ellipse 90% 70% at 50% 100%, rgba(0,0,0,0.5) 0%, transparent 60%)' }}
+          aria-hidden="true"
+        />
         <div className="hidden lg:block absolute top-0 bottom-0 left-1/2 w-px bg-white/[0.07]" aria-hidden="true" />
+
+        <BeaconMark className="hidden lg:block absolute top-24 left-8 w-6 h-6 text-[#b8975a]/30 z-10" />
+        <BeaconMark className="hidden lg:block absolute top-24 right-8 w-6 h-6 text-[#b8975a]/30 z-10" />
+        <BeaconMark className="hidden lg:block absolute bottom-8 right-8 w-6 h-6 text-[#b8975a]/30 z-10" />
 
         {/* Left: copy */}
         <div className="relative z-10 flex flex-col justify-center px-10 sm:px-14 lg:px-16 py-20 lg:py-28">
-          <div className="flex items-center gap-3 mb-7">
+          <div className="ah-fade ah-fade-1 flex items-center gap-3 mb-7">
             <span className="block w-6 h-px bg-[#b8975a]" />
             <span className="font-sans text-[11px] font-medium tracking-[0.18em] uppercase text-[#b8975a]">
               Our story
             </span>
           </div>
 
-          <h1 className="font-cormorant text-[clamp(34px,5vw,58px)] font-medium leading-[1.1] text-[#f5f0e8] mb-6">
+          <h1 className="ah-fade ah-fade-2 font-cormorant text-[clamp(34px,5vw,58px)] font-medium leading-[1.1] text-[#f5f0e8] mb-6">
             The Woman Behind
             <br />
             <em className="italic text-[#d4b87a]">Every Plot.</em>
           </h1>
 
-          <p className="font-sans text-sm font-light leading-relaxed text-[#f5f0e8]/55 max-w-[380px] mb-10">
+          <p className="ah-fade ah-fade-3 font-sans text-sm font-light leading-relaxed text-[#f5f0e8]/55 max-w-[380px] mb-10">
             Mrs. Alaba Afusat has spent years ensuring Sagamu families own land the right way — with full documents, no stress, no Omo-onile drama.
           </p>
 
-          <div className="flex flex-col gap-4 sm:flex-row">
+          <div className="ah-fade ah-fade-4 flex flex-col gap-4 sm:flex-row">
             <a
               href={waHref}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-block font-sans text-[13px] font-medium tracking-widest uppercase px-7 py-3.5 bg-[#b8975a] text-[#0f1810] transition-all duration-200 hover:bg-[#d4b87a] hover:-translate-y-px"
+              className="group relative inline-flex items-center overflow-hidden font-sans text-[13px] font-medium tracking-widest uppercase px-7 py-3.5 bg-[#b8975a] text-[#0f1810] transition-all duration-300 hover:-translate-y-px hover:shadow-[0_8px_24px_-6px_rgba(184,151,90,0.45)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#d4b87a]"
             >
-              Talk to Mrs. Alaba
+              <span className="relative z-10">Talk to Mrs. Alaba</span>
+              <span className="absolute inset-0 bg-[#d4b87a] translate-x-[-101%] group-hover:translate-x-0 transition-transform duration-300 ease-out" aria-hidden="true" />
             </a>
             <Link
               to="/listings"
-              className="inline-flex items-center gap-2 font-sans text-[13px] font-normal tracking-widest uppercase px-7 py-3.5 border border-white/20 text-[#f5f0e8]/75 transition-all duration-200 hover:border-white/45 hover:text-[#f5f0e8] hover:-translate-y-px"
+              className="inline-flex items-center gap-2 font-sans text-[13px] font-normal tracking-widest uppercase px-7 py-3.5 border border-white/20 text-[#f5f0e8]/75 transition-all duration-300 hover:border-[#b8975a]/60 hover:text-[#f5f0e8] hover:-translate-y-px focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#d4b87a]"
             >
               View Plots
               <span aria-hidden="true">{'→'}</span>
@@ -164,27 +206,67 @@ export default function About(): JSX.Element {
           </div>
         </div>
 
-        {/* Right: photo */}
-        <div className="relative z-10 flex flex-col justify-end items-center lg:items-start px-10 sm:px-12 lg:px-14 pt-12 lg:pt-0">
-          <div className="relative w-full max-w-[300px]">
+        {/* Right: photo, matted like the home hero */}
+        <div className="relative z-10 flex flex-col justify-end items-center lg:items-start px-10 sm:px-12 lg:px-16 pt-16 lg:pt-0 pb-14 lg:pb-24">
+          <div className="ah-fade ah-fade-3 relative w-full max-w-[320px]">
+
+            <div className="hidden lg:flex items-center gap-2 mb-4 pl-[2px]">
+              <span className="block w-3 h-px bg-[#b8975a]/60" />
+              <span className="font-mono text-[9px] tracking-[0.15em] text-[#b8975a]/60">
+                SAGAMU &middot; OGUN STATE
+              </span>
+            </div>
+
             <span
-              className="hidden lg:block absolute top-6 -right-4 w-px h-[calc(100%-48px)] bg-gradient-to-b from-transparent via-[#b8975a] to-transparent"
+              className="hidden lg:block absolute top-4 -right-6 w-px h-[calc(100%-32px)] bg-gradient-to-b from-transparent via-[#b8975a]/70 to-transparent"
               aria-hidden="true"
             />
-            <img
-              src="/images/owner.png"
-              alt="Mrs. Alaba Afusat, CEO"
-              className="block w-full aspect-[3/4] object-cover object-top"
-              style={IMG_STYLE}
-              onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-            />
-            <div className="border-t border-[#b8975a] bg-white/[0.04] px-5 py-4 backdrop-blur-sm">
-              <p className="font-cormorant text-base font-medium tracking-wide text-[#f5f0e8] mb-0.5">
-                Mrs. Alaba Afusat
-              </p>
-              <p className="font-sans text-[11px] font-light tracking-[0.12em] uppercase text-[#b8975a]">
-                Chief Executive Officer
-              </p>
+
+            <div className="relative border border-[#b8975a]/25 p-3 shadow-[0_35px_70px_-20px_rgba(0,0,0,0.65)]">
+              <div className="relative overflow-hidden aspect-[4/5] group">
+                <img
+                  src="/images/owner.png"
+                  alt="Mrs. Alaba Afusat, CEO"
+                  className="block w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+                  style={{ ...IMG_STYLE, objectPosition: '50% 22%' }}
+                  onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                />
+
+                <div
+                  className="absolute inset-x-0 top-0 h-[34%] pointer-events-none"
+                  style={{
+                    background: 'linear-gradient(to bottom, rgba(10,15,10,0.88) 0%, rgba(10,15,10,0.45) 55%, transparent 100%)',
+                  }}
+                  aria-hidden="true"
+                />
+
+                <div className="absolute inset-x-0 top-0 px-5 pt-4 pb-3">
+                  <p className="font-cormorant text-lg font-medium tracking-wide text-[#f5f0e8] mb-0.5">
+                    Mrs. Alaba Afusat
+                  </p>
+                  <p className="font-sans text-[10.5px] font-light tracking-[0.14em] uppercase text-[#d4b87a]">
+                    Chief Executive Officer
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Seal varied from the home hero and trust section — different rotation and label, tied to her tenure since this page is about her story */}
+            <div
+              className="hidden sm:flex absolute -bottom-6 -left-6 w-[76px] h-[76px] items-center justify-center rounded-full bg-[#0c120d] border border-[#b8975a]/70 shadow-[0_10px_30px_-8px_rgba(0,0,0,0.7)]"
+              style={{ transform: 'rotate(7deg)' }}
+              aria-hidden="true"
+            >
+              <div className="absolute inset-[3px] rounded-full border border-[#b8975a]/25" />
+              <div className="flex flex-col items-center gap-0.5">
+                <BeaconMark className="w-3.5 h-3.5 text-[#b8975a]" />
+                <span className="font-sans text-[7px] font-medium tracking-[0.14em] text-[#b8975a] leading-none">
+                  SINCE
+                </span>
+                <span className="font-sans text-[9px] font-medium tracking-[0.08em] text-[#b8975a]/80 leading-none mt-0.5">
+                  2018
+                </span>
+              </div>
             </div>
           </div>
         </div>
@@ -330,9 +412,10 @@ export default function About(): JSX.Element {
             href={waHref}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-block font-sans text-[13px] font-medium tracking-widest uppercase px-10 py-4 bg-[#b8975a] text-[#0f1810] transition-all duration-200 hover:bg-[#d4b87a] hover:-translate-y-px"
+            className="group relative inline-flex items-center overflow-hidden font-sans text-[13px] font-medium tracking-widest uppercase px-10 py-4 bg-[#b8975a] text-[#0f1810] transition-all duration-300 hover:-translate-y-px hover:shadow-[0_8px_24px_-6px_rgba(184,151,90,0.45)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#d4b87a]"
           >
-            Start the Conversation
+            <span className="relative z-10">Start the Conversation</span>
+            <span className="absolute inset-0 bg-[#d4b87a] translate-x-[-101%] group-hover:translate-x-0 transition-transform duration-300 ease-out" aria-hidden="true" />
           </a>
 
           <p className="font-sans text-[11px] text-[#f5f0e8]/20 mt-6 tracking-wide">

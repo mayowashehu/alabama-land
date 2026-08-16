@@ -75,10 +75,10 @@ const DOC_LABEL: Record<DocumentType, string> = {
   survey: 'Survey',
 };
 
-const STATUS_STYLES: Record<ListingStatus, string> = {
-  available: 'text-[#6db87a]',
-  reserved: 'text-[#d4b87a]',
-  sold: 'text-[#f5f0e8]/30',
+const STATUS_STYLES: Record<ListingStatus, { text: string; dot: string }> = {
+  available: { text: 'text-[#6db87a]', dot: 'bg-[#6db87a]' },
+  reserved: { text: 'text-[#d4b87a]', dot: 'bg-[#d4b87a]' },
+  sold: { text: 'text-[#f5f0e8]/30', dot: 'bg-[#f5f0e8]/30' },
 };
 
 interface Filters {
@@ -90,6 +90,15 @@ interface Filters {
 
 const IMG_STYLE = { filter: 'grayscale(10%) contrast(1.04)' };
 
+function BeaconMark({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M16 2v10M16 20v10M2 16h10M20 16h10" stroke="currentColor" strokeWidth="1" />
+      <circle cx="16" cy="16" r="3.5" stroke="currentColor" strokeWidth="1" fill="none" />
+    </svg>
+  );
+}
+
 function ListingCard({ listing, index }: { listing: Listing; index: number }): JSX.Element {
   const waHref = getWhatsAppLink('listing', {
     estate: listing.estateName,
@@ -98,14 +107,15 @@ function ListingCard({ listing, index }: { listing: Listing; index: number }): J
   });
 
   const isSold = listing.status === 'sold';
+  const status = STATUS_STYLES[listing.status];
 
   return (
-    <article className="flex flex-col bg-[#131f14] border border-white/[0.07] group transition-colors duration-300 hover:border-[#b8975a]/30">
+    <article className="flex flex-col bg-[#131f14] border border-white/[0.07] group transition-all duration-300 hover:border-[#b8975a]/30 hover:-translate-y-1 hover:shadow-[0_24px_48px_-24px_rgba(0,0,0,0.6)]">
       <div className="relative overflow-hidden aspect-[4/3]">
         <img
           src={listing.images[0]?.url}
           alt={`${listing.estateName} — ${listing.plotNumber}`}
-          className={`w-full h-full object-cover transition-transform duration-700 ${isSold ? 'grayscale opacity-40' : 'group-hover:scale-[1.03]'}`}
+          className={`w-full h-full object-cover transition-transform duration-700 ${isSold ? 'grayscale opacity-40' : 'group-hover:scale-[1.05]'}`}
           style={isSold ? undefined : IMG_STYLE}
           loading="lazy"
           onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
@@ -150,7 +160,8 @@ function ListingCard({ listing, index }: { listing: Listing; index: number }): J
           <p className="font-cormorant text-[clamp(24px,2.5vw,32px)] font-medium leading-none text-[#f5f0e8]">
             {formatPrice(listing.price)}
           </p>
-          <span className={`font-sans text-[10px] tracking-[0.12em] uppercase font-medium ${STATUS_STYLES[listing.status]}`}>
+          <span className={`inline-flex items-center gap-1.5 font-sans text-[10px] tracking-[0.12em] uppercase font-medium ${status.text}`}>
+            <span className={`block w-1.5 h-1.5 rounded-full ${status.dot}`} aria-hidden="true" />
             {listing.status}
           </span>
         </div>
@@ -160,7 +171,7 @@ function ListingCard({ listing, index }: { listing: Listing; index: number }): J
         <div className="flex items-center gap-3 mt-auto">
           <Link
             to={`/listings/${listing.slug}`}
-            className="flex-1 text-center font-sans text-[11px] font-medium tracking-widest uppercase py-3 border border-white/15 text-[#f5f0e8]/60 transition-all duration-200 hover:border-white/30 hover:text-[#f5f0e8]"
+            className="flex-1 text-center font-sans text-[11px] font-medium tracking-widest uppercase py-3 border border-white/15 text-[#f5f0e8]/60 transition-all duration-200 hover:border-[#b8975a]/50 hover:text-[#f5f0e8] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#d4b87a]"
           >
             View Details
           </Link>
@@ -169,9 +180,10 @@ function ListingCard({ listing, index }: { listing: Listing; index: number }): J
               href={waHref}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex-1 text-center font-sans text-[11px] font-medium tracking-widest uppercase py-3 bg-[#b8975a] text-[#0f1810] transition-all duration-200 hover:bg-[#d4b87a]"
+              className="group/cta relative flex-1 text-center overflow-hidden font-sans text-[11px] font-medium tracking-widest uppercase py-3 bg-[#b8975a] text-[#0f1810] transition-all duration-300 hover:shadow-[0_8px_20px_-6px_rgba(184,151,90,0.45)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#d4b87a]"
             >
-              WhatsApp
+              <span className="relative z-10">WhatsApp</span>
+              <span className="absolute inset-0 bg-[#d4b87a] translate-x-[-101%] group-hover/cta:translate-x-0 transition-transform duration-300 ease-out" aria-hidden="true" />
             </a>
           )}
         </div>
@@ -209,9 +221,9 @@ export default function Listings(): JSX.Element {
     setFilters({ status: 'all', documentType: 'all', minPrice: '', maxPrice: '' });
 
   const selectClass =
-    'w-full bg-[#131f14] border border-white/[0.08] px-3 py-2.5 font-sans text-[12px] text-[#f5f0e8]/70 tracking-wide focus:outline-none focus:border-[#b8975a]/50 transition-colors';
+    'w-full bg-[#0f1810] border border-white/[0.08] px-3 py-2.5 font-sans text-[12px] text-[#f5f0e8]/70 tracking-wide transition-colors duration-200 hover:border-white/20 focus:outline-none focus:border-[#b8975a]/60';
   const inputClass =
-    'w-full bg-[#131f14] border border-white/[0.08] px-3 py-2.5 font-sans text-[12px] text-[#f5f0e8]/70 placeholder-[#f5f0e8]/20 tracking-wide focus:outline-none focus:border-[#b8975a]/50 transition-colors';
+    'w-full bg-[#0f1810] border border-white/[0.08] px-3 py-2.5 font-sans text-[12px] text-[#f5f0e8]/70 placeholder-[#f5f0e8]/20 tracking-wide transition-colors duration-200 hover:border-white/20 focus:outline-none focus:border-[#b8975a]/60';
   const labelClass =
     'block font-sans text-[10px] font-medium tracking-[0.16em] uppercase text-[#b8975a]/60 mb-2';
 
@@ -296,8 +308,9 @@ export default function Listings(): JSX.Element {
             {hasFilters && (
               <button
                 onClick={clearFilters}
-                className="font-sans text-[11px] font-medium tracking-widest uppercase text-[#b8975a]/60 hover:text-[#b8975a] transition-colors"
+                className="inline-flex items-center gap-1.5 font-sans text-[11px] font-medium tracking-widest uppercase text-[#b8975a]/70 hover:text-[#b8975a] transition-colors"
               >
+                <span aria-hidden="true">&times;</span>
                 Clear filters
               </button>
             )}
@@ -319,8 +332,9 @@ export default function Listings(): JSX.Element {
               ))}
             </div>
           ) : (
-            <div className="flex flex-col items-center justify-center py-24 border border-white/[0.06]">
-              <p className="font-cormorant text-xl italic text-[#f5f0e8]/30 mb-4">
+            <div className="flex flex-col items-center justify-center gap-4 py-24 border border-white/[0.06]">
+              <BeaconMark className="w-7 h-7 text-[#b8975a]/30" />
+              <p className="font-cormorant text-xl italic text-[#f5f0e8]/30">
                 No plots match your criteria.
               </p>
               <button

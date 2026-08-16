@@ -13,6 +13,8 @@ interface StatCardProps {
   note?: string;
 }
 
+console.log('Admin Demo Mode:', import.meta.env)
+
 function StatCard({ label, value, accent, note }: StatCardProps): JSX.Element {
   return (
     <div className={`flex flex-col p-6 border ${accent ? 'border-[#b8975a]/30 bg-[#1a2a1a]' : 'border-white/[0.07] bg-[#131f14]'}`}>

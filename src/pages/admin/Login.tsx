@@ -11,7 +11,7 @@ const schema = z.object({
   email: z.string().email('Enter a valid email'),
   password: z.string().min(1, 'Password is required'),
 });
-
+console.log('Admin Demo Mode:', import.meta.env.VITE_ADMIN_DEMO_MODE)
 type FormValues = z.infer<typeof schema>;
 
 const inputClass =
@@ -31,14 +31,15 @@ export function Login(): JSX.Element {
     resolver: zodResolver(schema),
     defaultValues: { email: '', password: '' },
   });
-
-  const onSubmit = async (values: FormValues): Promise<void> => {
+const onSubmit = async (values: FormValues): Promise<void> => {
     try {
       const { data } = await apiClient.post<{
         success: boolean;
         token: string;
         user: { name: string; email: string; role: string };
-      }>('/api/v1/auth/login', values);
+      }>('/api/v1/auth/login', values, {
+        timeout: 10000, // 10-second hard timeout to prevent endless hanging
+      });
 
       if (!data.success || !data.token) {
         toast.error('Login failed. Please try again.');
@@ -48,15 +49,23 @@ export function Login(): JSX.Element {
       login(data.token);
       toast.success('Welcome back');
       navigate('/admin/listings');
-    } catch (e) {
-      const message =
-        typeof e === 'object' && e !== null && 'response' in e
-          ? String((e as { response?: { data?: { message?: unknown } } }).response?.data?.message ?? '')
-          : '';
-      toast.error(message || 'Wrong email or password');
+    } catch (e: any) {
+      console.error('Login failure anomaly:', e);
+
+      if (e.code === 'ECONNABORTED') {
+        toast.error('Connection timed out. The server took too long to respond.');
+        return;
+      }
+
+      if (!e.response) {
+        toast.error('Network unreachable. Check if the backend server is running.');
+        return;
+      }
+
+      const serverMessage = e.response?.data?.message;
+      toast.error(serverMessage || 'Invalid email or password.');
     }
   };
-
   return (
     <div className="min-h-screen bg-[#0c1610] flex items-center justify-center px-6">
 

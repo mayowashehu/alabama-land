@@ -18,6 +18,7 @@ import About from './pages/About';
 import Blog from './pages/Blog';
 import BlogPost from './pages/BlogPost';
 import NotFound from './pages/NotFound';
+import { ScrollToTop } from './components/ScrollToTop';
 
 // Admin Pages (lazy)
 const AdminLogin = lazy(() => import('./pages/admin/Login').then((m) => ({ default: m.Login })));
@@ -52,6 +53,7 @@ function AppShell(): JSX.Element {
 
   return (
     <div className="flex flex-col min-h-screen">
+      <ScrollToTop />
       {!isAdmin && <Navbar />}
       <main className="flex-1">
         <Routes>
